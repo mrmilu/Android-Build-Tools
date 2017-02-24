@@ -1,4 +1,29 @@
-  def bumpTypes = ["PATCH", "MINOR", "MAJOR"]
+
+
+gradle.allprojects{
+    ext.bumpTypes = ["PATCH", "MINOR", "MAJOR"]
+
+    ext.getMajorVersionNumber = {
+        return getVersionNumber("MAJOR")
+    }
+    ext.getMinorVersionNumber = {
+        return getVersionNumber("MINOR")
+    }
+    ext.getPatchVersionNumber = {
+        return getVersionNumber("PATCH")
+    }
+    ext.getBuildNumber = {
+        return getVersionNumber("AI_VERSION_CODE")
+    }
+    ext.getVersionNameString = {
+        return "${getMajorVersionNumber()}.${getMinorVersionNumber()}.${getPatchVersionNumber()}"
+    }
+    ext.bumpTypes.each { bumpType ->
+        task ("increment${bumpType.toLowerCase().capitalize()}") << {
+            incrementVersion(bumpType)
+        }
+    }
+}
 private def getVersionNumber(property){
     Properties props = new Properties()
     props.load(new FileInputStream("app/version.properties"))
@@ -8,21 +33,7 @@ private def getVersionNumber(property){
     }
     return number
 }
-def getMajorVersionNumber(){
-    return getVersionNumber("MAJOR")
-}
-def getMinorVersionNumber(){
-    return getVersionNumber("MINOR")
-}
-def getPatchVersionNumber(){
-    return getVersionNumber("PATCH")
-}
-def getBuildNumber(){
-    return getVersionNumber("AI_VERSION_CODE")
-}
-def getVersionNameString(){
-    return "${getMajorVersionNumber()}.${getMinorVersionNumber()}.${getPatchVersionNumber()}"
-}
+
 task printVersionNumber(){
     print(getVersionNameString())
 }
@@ -32,45 +43,45 @@ task renameApk(){
 }
 def incrementVersion(bumpType){
 
-        def currentBumpType = bumpType
+    def currentBumpType = bumpType
 
-        Properties props = new Properties()
-        props.load(new FileInputStream("app/version.properties"))
-        def major = props.getProperty("MAJOR")
-        def minor = props.getProperty("MINOR")
-        def patch = props.getProperty("PATCH")
-        def majorInt = Integer.parseInt(major)
-        def minorInt = Integer.parseInt(minor)
-        def patchInt = Integer.parseInt(patch)
+    Properties props = new Properties()
+    props.load(new FileInputStream("app/version.properties"))
+    def major = props.getProperty("MAJOR")
+    def minor = props.getProperty("MINOR")
+    def patch = props.getProperty("PATCH")
+    def majorInt = Integer.parseInt(major)
+    def minorInt = Integer.parseInt(minor)
+    def patchInt = Integer.parseInt(patch)
 
-        switch (currentBumpType) {
-            case "MAJOR":
-                majorInt = majorInt + 1
-                minorInt = 0
-                patchInt = 0
-                break
-            case "MINOR":
-                minorInt = minorInt + 1
-                patchInt = 0
-                break
-            case "PATCH":
-                patchInt = patchInt + 1
-                break
-            default: break
-        }
-        props.setProperty("MAJOR", String.valueOf(majorInt))
-        props.setProperty("MINOR", String.valueOf(minorInt))
-        props.setProperty("PATCH", String.valueOf(patchInt))
-        println(majorInt)
-        println(minorInt)
-        println(patchInt)
-        def writer = new FileWriter(file('version.properties'))
-        try {
-            props.store(writer, '')
-            writer.flush()
-        } finally {
-            writer.close()
-        }
+    switch (currentBumpType) {
+        case "MAJOR":
+            majorInt = majorInt + 1
+            minorInt = 0
+            patchInt = 0
+            break
+        case "MINOR":
+            minorInt = minorInt + 1
+            patchInt = 0
+            break
+        case "PATCH":
+            patchInt = patchInt + 1
+            break
+        default: break
+    }
+    props.setProperty("MAJOR", String.valueOf(majorInt))
+    props.setProperty("MINOR", String.valueOf(minorInt))
+    props.setProperty("PATCH", String.valueOf(patchInt))
+    println(majorInt)
+    println(minorInt)
+    println(patchInt)
+    def writer = new FileWriter(file('version.properties'))
+    try {
+        props.store(writer, '')
+        writer.flush()
+    } finally {
+        writer.close()
+    }
     println("MAJOR ${getMajorVersionNumber()}")
     println("MINOR ${getMinorVersionNumber()}")
     println("PATCH ${getPatchVersionNumber()}")
