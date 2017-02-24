@@ -72,9 +72,6 @@ def incrementVersion(bumpType){
     props.setProperty("MAJOR", String.valueOf(majorInt))
     props.setProperty("MINOR", String.valueOf(minorInt))
     props.setProperty("PATCH", String.valueOf(patchInt))
-    println(majorInt)
-    println(minorInt)
-    println(patchInt)
     def writer = new FileWriter(file('version.properties'))
     try {
         props.store(writer, '')
@@ -82,8 +79,6 @@ def incrementVersion(bumpType){
     } finally {
         writer.close()
     }
-    println("MAJOR ${getMajorVersionNumber()}")
-    println("MINOR ${getMinorVersionNumber()}")
-    println("PATCH ${getPatchVersionNumber()}")
+
 
 }
