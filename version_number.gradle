@@ -27,7 +27,7 @@ gradle.allprojects{
 private def getVersionNumber(property){
     Properties props = new Properties()
     props.load(new FileInputStream("app/version.properties"))
-    if (!props.hasProperty(property)){
+    if (props.getProperty(property) == null){
         throw new GradleException("Must define ${property} in app/version.properties file")
     }
     def number = Integer.parseInt(props.getProperty(property))
