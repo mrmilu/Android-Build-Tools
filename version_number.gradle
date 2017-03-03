@@ -39,6 +39,7 @@ private def getVersionNumber(property){
 
 task printVersionNumber(){
     print(getVersionNameString())
+    return getVersionNameString()
 }
 task renameApk(){
 
