@@ -42,7 +42,7 @@ task printVersionNumber(){
 }
 task renameApk(){
 
-    file('build/outputs/apk/app-staging-release.apk').renameTo("app/build/outputs/apk/shakn-${getVersionNameString()}.${getBuildNumber()}.apk")
+    file('build/outputs/apk/app-production-release.apk').renameTo("app/build/outputs/apk/${APP_NAME}-${getVersionNameString()}.${getBuildNumber()}.apk")
 }
 def incrementVersion(bumpType){
 
